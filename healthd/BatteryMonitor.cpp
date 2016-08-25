@@ -147,7 +147,6 @@ BatteryMonitor::PowerSupplyType BatteryMonitor::readPowerSupplyType(const String
             { "Wipower", ANDROID_POWER_SUPPLY_TYPE_WIRELESS },
             { "DockBattery", ANDROID_POWER_SUPPLY_TYPE_DOCK_BATTERY },
             { "DockAC", ANDROID_POWER_SUPPLY_TYPE_DOCK_AC },
-            { "DASH", ANDROID_POWER_SUPPLY_TYPE_AC },
             { NULL, 0 },
     };
 
@@ -207,7 +206,11 @@ bool BatteryMonitor::update(void) {
     props.batteryLevel = mBatteryFixedCapacity ?
         mBatteryFixedCapacity :
         getIntField(mHealthdConfig->batteryCapacityPath);
+#ifndef MTK_HARDWARE
     props.batteryVoltage = getIntField(mHealthdConfig->batteryVoltagePath) / 1000;
+#else
+    props.batteryVoltage = getIntField(mHealthdConfig->batteryVoltagePath);
+#endif
 
     props.batteryTemperature = mBatteryFixedTemperature ?
         mBatteryFixedTemperature :
